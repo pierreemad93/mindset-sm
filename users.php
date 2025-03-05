@@ -2,7 +2,7 @@
 <?php require_once "includes/navbar.php" ?>
 <div class="container">
 
-    <h1 class="text-center">Dashboard </h1>
+    <h1 class="text-center">Users </h1>
 
 </div>
 <?php require_once "includes/footer.php" ?>

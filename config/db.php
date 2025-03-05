@@ -1,7 +1,7 @@
 <?php
 // PDO => php data object 
 try {
-    $dest = 'mysql:host=localhost;dbname=mudzzo';
+    $dest = 'mysql:host=localhost;dbname=mindset';
     $user = 'root';
     $pass = '';
     $connect = new PDO($dest, $user, $pass);
