@@ -14,6 +14,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($inDb == 1) {
         $_SESSION['FULL_NAME'] = $user['full_name'];
         $_SESSION['IsLoggedIn'] = true;
+        // print_r($_SESSION);
+        // exit();
         header('Location:dashboard.php');
     } else {
         echo "user doesnt exist";

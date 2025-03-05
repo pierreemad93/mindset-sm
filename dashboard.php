@@ -1,11 +1,11 @@
 <?php
-session_start();
-if (!isset($_SESSION["isLoggedIn"])) {
-    header("Location: index.php"); 
+require_once "includes/header.php";
+if (!isset($_SESSION["IsLoggedIn"])) {
+    header("Location: index.php");
     exit();
 }
 
-require_once "includes/header.php";
+
 require_once "includes/navbar.php";
 ?>
 
