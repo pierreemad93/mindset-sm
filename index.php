@@ -21,43 +21,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 
 ?>
-<!doctype html>
-<html lang="en">
+<?php require_once "includes/header.php" ?>
+<div class="container">
 
-<head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <h1 class="text-center">Login form</h1>
+    <form method="POST" action="<?php $_SERVER['PHP_SELF'] ?>">
+        <div class="mb-3">
+            <label class="form-label">username</label>
+            <input type="text" class="form-control" name="username">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Password</label>
+            <input type="password" class="form-control" name="password">
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
 
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-
-    <title>Hello, world!</title>
-</head>
-
-<body>
-    <div class="container">
-
-        <h1 class="text-center">Login form</h1>
-        <form method="POST" action="<?php $_SERVER['PHP_SELF'] ?>">
-            <div class="mb-3">
-                <label class="form-label">username</label>
-                <input type="text" class="form-control" name="username">
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Password</label>
-                <input type="password" class="form-control" name="password">
-            </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
-    </div>
-
-    <!-- Optional JavaScript; choose one of the two! -->
-
-    <!-- Option 1: Bootstrap Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-
-
-</body>
-
-</html>
+<?php require_once "includes/footer.php" ?>
