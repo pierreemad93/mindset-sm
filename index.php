@@ -1,5 +1,6 @@
 <?php
 require_once "config/db.php";
+require_once "includes/header.php";
 // print_r($_POST);
 // echo $_SERVER['REQUEST_METHOD']  ;
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -11,6 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $user = $stmt->fetch(); //return array;
     $inDb = $stmt->rowCount();
     if ($inDb == 1) {
+        $_SESSION['FULL_NAME'] = $user['full_name'];
         header('Location:dashboard.php');
     } else {
         echo "user doesnt exist";
@@ -21,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 
 ?>
-<?php require_once "includes/header.php" ?>
+
 <div class="container">
 
     <h1 class="text-center">Login form</h1>
