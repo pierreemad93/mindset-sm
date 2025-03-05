@@ -1,7 +1,7 @@
 <?php
 
 session_start();
-session_abort();
 session_destroy();
+session_abort();
 
 header("Location:index.php");
