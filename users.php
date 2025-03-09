@@ -37,7 +37,7 @@ $page = isset($_GET['action']) ? $_GET['action'] : 'index';
                         <td>
                             <a href="?action=show&id=<?= $user['id'] ?>" class="btn btn-primary">show</a>
                             <a href="?action=edit&id=<?= $user['id'] ?>" class="btn btn-warning">edit</a>
-                            <a href="" class="btn btn-danger">delete</a>
+                            <a href="?action=delete&id=<?= $user['id'] ?>" class="btn btn-danger">delete</a>
                         </td>
                     </tr>
                 <?php endforeach ?>
@@ -149,6 +149,17 @@ $page = isset($_GET['action']) ? $_GET['action'] : 'index';
         $stmt->execute([$username, $email, $fullname, $id]);
         header("Location:users.php");
     }
+    ?>
+<?php elseif ($page == 'delete'): ?>
+    <?php
+    $user_id = intval($_GET['id']) ? $_GET['id'] : header("Location:users.php");
+    $stmt = $connect->prepare('DELETE FROM `users` WHERE `id` =? ');
+    $stmt->execute([$user_id]);
+    header("Location:users.php");
+    ?>
+<?php else: ?>
+    <?php
+    header("Location:users.php");
     ?>
 <?php endif ?>
 <?php
