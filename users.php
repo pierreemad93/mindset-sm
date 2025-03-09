@@ -121,7 +121,8 @@ $page = isset($_GET['action']) ? $_GET['action'] : 'index';
     ?>
     <div class="container">
         <h1 class="text-center">Edit user</h1>
-        <form action="?action=store" method="POST" enctype="multipart/form-data">
+        <form action="?action=update" method="POST" enctype="multipart/form-data">
+            <input type="hidden" value="<?= $user['id'] ?>" name=" user_id" />
             <div class="mb-3">
                 <label class="form-label">Username</label>
                 <input type="text" class="form-control" name="username" value="<?= $user['username'] ?>">
@@ -138,6 +139,17 @@ $page = isset($_GET['action']) ? $_GET['action'] : 'index';
         </form>
     </div>
 <?php elseif ($page == 'update'): ?>
+    <?php
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        $id = $_POST['user_id'];
+        $username = $_POST['username'];
+        $email =  $_POST['email'];
+        $fullname = $_POST['fullname'];
+        $stmt = $connect->prepare('UPDATE `users` SET `username`=? ,`email`=?  , `full_name`=? WHERE `id` = ? ');
+        $stmt->execute([$username, $email, $fullname, $id]);
+        header("Location:users.php");
+    }
+    ?>
 <?php endif ?>
 <?php
 require_once "includes/footer.php";
