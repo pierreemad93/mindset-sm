@@ -11,7 +11,8 @@ require_once "includes/navbar.php";
 
 $stmt = $connect->prepare('SELECT * FROM `users` ');
 $stmt->execute();
-$users = $stmt->fetchAll();
+$users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// $users = $stmt->fetch();
 // echo "<pre>";
 // print_r($users);
 // echo "</pre>";
