@@ -35,8 +35,8 @@ $page = isset($_GET['action']) ? $_GET['action'] : 'index';
                         <td><?= $user['full_name'] ?></td>
                         <td><?= $user['email'] ?></td>
                         <td>
-                            <a href="" class="btn btn-primary">show</a>
-                            <a href="" class="btn btn-warning">edit</a>
+                            <a href="?action=show&id=<?= $user['id'] ?>" class="btn btn-primary">show</a>
+                            <a href="?action=edit&id=<?= $user['id'] ?>" class="btn btn-warning">edit</a>
                             <a href="" class="btn btn-danger">delete</a>
                         </td>
                     </tr>
@@ -81,6 +81,63 @@ $page = isset($_GET['action']) ? $_GET['action'] : 'index';
         header("Location:users.php");
     }
     ?>
+<?php elseif ($page == 'show'): ?>
+
+    <?php
+    $user_id = intval($_GET['id']) ? $_GET['id'] : header("Location:users.php");
+    $stmt = $connect->prepare('SELECT * FROM `users` WHERE `id` =? ');
+    $stmt->execute([$user_id]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    // print_r($user);
+    ?>
+    <div class="container">
+        <h1 class="text-center">Show user</h1>
+        <form action="?action=store" method="POST" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label class="form-label">Username</label>
+                <input type="text" class="form-control" name="username" value="<?= $user['username'] ?>" disabled>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Email address</label>
+                <input type="email" class="form-control" name="email" value="<?= $user['email'] ?>" disabled>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Fullname</label>
+                <input type="text" class="form-control" name="fullname" value="<?= $user['full_name'] ?>" disabled>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Status</label>
+                <input type="text" class="form-control" name="fullname" value="<?= $user['status'] ?>" disabled>
+            </div>
+
+        </form>
+    </div>
+<?php elseif ($page == 'edit'): ?>
+    <?php
+    $user_id = intval($_GET['id']) ? $_GET['id'] : header("Location:users.php");
+    $stmt = $connect->prepare('SELECT * FROM `users` WHERE `id` =? ');
+    $stmt->execute([$user_id]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    ?>
+    <div class="container">
+        <h1 class="text-center">Edit user</h1>
+        <form action="?action=store" method="POST" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label class="form-label">Username</label>
+                <input type="text" class="form-control" name="username" value="<?= $user['username'] ?>">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Email address</label>
+                <input type="email" class="form-control" name="email" value="<?= $user['email'] ?>">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Fullname</label>
+                <input type="text" class="form-control" name="fullname" value="<?= $user['full_name'] ?>">
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+<?php elseif ($page == 'update'): ?>
 <?php endif ?>
 <?php
 require_once "includes/footer.php";
