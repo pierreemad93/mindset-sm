@@ -47,6 +47,7 @@ $page = isset($_GET['action']) ? $_GET['action'] : 'index';
     </div>
     <!-- Create page -->
 <?php elseif ($page == 'create'): ?>
+    
     <div class="container">
         <h1 class="text-center">Create user</h1>
         <form action="?action=store" method="POST" enctype="multipart/form-data">
@@ -72,15 +73,85 @@ $page = isset($_GET['action']) ? $_GET['action'] : 'index';
 <?php elseif ($page == 'store'): ?>
     <?php
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        
         $username = $_POST['username'];
         $email =  $_POST['email'];
         $password = sha1($_POST['password']);
         $fullname = $_POST['fullname'];
-        $stmt = $connect->prepare('INSERT INTO `users` (`username` , `email` , `password` , `full_name` , `status` , `created_at`) VALUES (? , ? , ? , ? , "active" , now() ) ');
-        $stmt->execute([$username, $email, $password, $fullname]);
-        header("Location:users.php");
+
+        
+
+        if(empty($username)){
+            $errors['username'] = "Username is required!";
+        }else{
+            $User_Name = htmlspecialchars($username);
+            if(!preg_match("/^[a-zA-Z-' ]*$/", $User_Name)){
+                $errors['username'] = "Only letters and spaces allowed";
+            }
+        }
+
+        if(empty($email)){
+            $errors['email'] = "Email is Required!";
+        }else{
+            $email = filter_var($email, FILTER_SANITIZE_EMAIL);
+            if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
+                $errors['email'] = 'Invalid email format!';
+            }
+        }
+
+        if (empty($password)) {
+            $errors['password'] = "Password is required!";
+        } elseif (strlen($password) < 6) { // Minimum 6 characters
+            $errors['password'] = "Password must be at least 6 characters long!";
+        } else {
+            $hashedPassword = password_hash($password, PASSWORD_BCRYPT); // Secure Hashing
+        }
+
+        if (empty($fullname)) {
+            $errors['fullname'] = "Full name is required!";
+        } else {
+            $fullname = htmlspecialchars($fullname); // Prevent XSS
+            if (!preg_match("/^[a-zA-Z-' ]*$/", $fullname)) {
+                $errors['fullname'] = "Only letters and spaces allowed!";
+            }
+        }
+
+        if(empty($errors)){
+            $stmt = $connect->prepare('INSERT INTO `users` (`username` , `email` , `password` , `full_name` , `status` , `created_at`) VALUES (? , ? , ? , ? , "active" , now() ) ');
+            $stmt->execute([$username, $email, $password, $fullname]);
+            header("Location:users.php");
+        }//else{
+        //     header("Location: " . $_SERVER['PHP_SELF'] . "?action=store");
+        // }
+        
     }
     ?>
+    <div class="container">
+        <h1 class="text-center">Create user</h1>
+        <form action="?action=store" method="POST" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label class="form-label">Username</label>
+                <input type="text" class="form-control" name="username">
+                <p style="color:red;"><?= $errors['username'] ?? '' ?></p>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Email address</label>
+                <input type="email" class="form-control" name="email">
+                <p style="color:red;"><?= $errors['email'] ?? '' ?></p>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Password</label>
+                <input type="password" class="form-control" name="password">
+                <p style="color:red;"><?= $errors['password'] ?? '' ?></p>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Fullname</label>
+                <input type="text" class="form-control" name="fullname">
+                <p style="color:red;"><?= $errors['fullname'] ?? '' ?></p>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
 <?php elseif ($page == 'show'): ?>
 
     <?php
