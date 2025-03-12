@@ -72,6 +72,40 @@ $page = isset($_GET['action']) ? $_GET['action'] : 'index';
 <?php elseif ($page == 'store'): ?>
     <?php
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        if($_POST['username']==null):
+            echo "Please, enter the username!";
+            exit();
+        endif;
+        if($_POST['email']!=null):
+            if(!filter_var($_POST['email'],FILTER_VALIDATE_EMAIL)):
+                echo "Warning! unvalid email";
+            else:
+                $stmt = $connect->prepare('SELECT `email` FROM `users` WHERE `email` =? LIMIT 1');
+                $stmt->execute([$_POST['email']]);
+              $email= $stmt->fetch();
+              $dbinn=$stmt->rowCount();
+              if($dbinn==1):
+                echo "email is already exist in  database!";
+                exit();
+              endif;
+            endif;
+        else:    
+            echo "Please, enter the email!";
+            exit();
+        endif;
+        if($_POST['password']!=null):
+            if(strlen($_POST['password'])<6):
+                echo "The password should be more then 6 digits!";
+                exit();
+        endif;
+        else:
+            echo "Please, enter the password!";
+            exit();
+        endif;
+        if($_POST['fullname']==null):
+            echo "Please, enter the fullname!";
+            exit();
+        endif;
         $username = $_POST['username'];
         $email =  $_POST['email'];
         $password = sha1($_POST['password']);
@@ -142,9 +176,30 @@ $page = isset($_GET['action']) ? $_GET['action'] : 'index';
     <?php
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $id = $_POST['user_id'];
-        $username = $_POST['username'];
-        $email =  $_POST['email'];
-        $fullname = $_POST['fullname'];
+        if($_POST['username']!=null):
+            $username = $_POST['username'];
+        else:
+            echo "Please, enter the username!";
+            exit();
+        endif;
+        if($_POST['email']!=null):
+            if(!filter_var($_POST['email'],FILTER_VALIDATE_EMAIL)):
+                echo "Warning! unvalid email";
+                exit();
+            else:
+                $email =  $_POST['email'];
+            endif;
+        else:
+            echo "Please, enter the email!";
+            exit();
+        endif;
+        if($_POST['fullname']!=null):
+            $fullname = $_POST['fullname'];
+        else:
+            echo "Please, enter the fullname!";
+            exit();
+        endif;
+
         $stmt = $connect->prepare('UPDATE `users` SET `username`=? ,`email`=?  , `full_name`=? WHERE `id` = ? ');
         $stmt->execute([$username, $email, $fullname, $id]);
         header("Location:users.php");
