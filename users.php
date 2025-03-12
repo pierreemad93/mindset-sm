@@ -76,7 +76,7 @@ $page = isset($_GET['action']) ? $_GET['action'] : 'index';
         
         $username = $_POST['username'];
         $email =  $_POST['email'];
-        $password = sha1($_POST['password']);
+        $password = $_POST['password'];
         $fullname = $_POST['fullname'];
 
         
@@ -101,16 +101,16 @@ $page = isset($_GET['action']) ? $_GET['action'] : 'index';
 
         if (empty($password)) {
             $errors['password'] = "Password is required!";
-        } elseif (strlen($password) < 6) { // Minimum 6 characters
+        } elseif (strlen($password) < 6) {
             $errors['password'] = "Password must be at least 6 characters long!";
         } else {
-            $hashedPassword = password_hash($password, PASSWORD_BCRYPT); // Secure Hashing
+            $password = sha1($_POST['password']);
         }
 
         if (empty($fullname)) {
             $errors['fullname'] = "Full name is required!";
         } else {
-            $fullname = htmlspecialchars($fullname); // Prevent XSS
+            $fullname = htmlspecialchars($fullname); 
             if (!preg_match("/^[a-zA-Z-' ]*$/", $fullname)) {
                 $errors['fullname'] = "Only letters and spaces allowed!";
             }
