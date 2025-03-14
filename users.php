@@ -72,6 +72,44 @@ $page = isset($_GET['action']) ? $_GET['action'] : 'index';
 <?php elseif ($page == 'store'): ?>
     <?php
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        if($_POST['username']==null):
+            echo "Enter a valid Username ! ";
+            exit();
+        endif;
+    $email = ($_POST['email']);
+
+        if (empty($email)) {
+            echo "Please Enter Email";
+            exit();
+        }
+        
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            echo "Please enter a valid Email format !";
+            exit();
+        }
+     
+        $stmt = $connect->prepare('SELECT COUNT(*) FROM `users` WHERE `email` = ?');
+        $stmt->execute([$email]);
+        
+        if ($stmt->fetchColumn() > 0) {
+            echo "Email is already exists!";
+            exit();
+        }
+     $password = ($_POST['password']);
+
+        if (empty($password)) {
+            echo "Enter your Password !";
+            exit();
+        }
+        
+        if (strlen($password) < 8) {
+            echo "Your Password Should be atleast 8 characters";
+            exit();
+        }
+        if($_POST['fullname']==null):
+            echo "Enter Your Fullname";
+            exit();
+        endif;
         $username = $_POST['username'];
         $email =  $_POST['email'];
         $password = sha1($_POST['password']);
@@ -142,9 +180,30 @@ $page = isset($_GET['action']) ? $_GET['action'] : 'index';
     <?php
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $id = $_POST['user_id'];
-        $username = $_POST['username'];
-        $email =  $_POST['email'];
-        $fullname = $_POST['fullname'];
+        if($_POST['username']!=null):
+            $username = $_POST['username'];
+        else:
+            echo "Enter a Valid Username";
+            exit();
+        endif;
+        if($_POST['email']!=null):
+            if(!filter_var($_POST['email'],FILTER_VALIDATE_EMAIL)):
+                echo "Enter a valid email ";
+                exit();
+            else:
+                $email =  $_POST['email'];
+            endif;
+        else:
+            echo "Enter Email";
+            exit();
+        endif;
+        if($_POST['fullname']!=null):
+            $fullname = $_POST['fullname'];
+        else:
+            echo "Enter Fullname";
+            exit();
+        endif;
+
         $stmt = $connect->prepare('UPDATE `users` SET `username`=? ,`email`=?  , `full_name`=? WHERE `id` = ? ');
         $stmt->execute([$username, $email, $fullname, $id]);
         header("Location:users.php");
