@@ -69,16 +69,23 @@ $page = isset($_GET['action']) ? $_GET['action'] : 'index';
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
     </div>
-<?php elseif ($page == 'store'): ?>
+    <?php elseif ($page == 'store'): ?>
     <?php
+    
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        $username = $_POST['username'];
-        $email =  $_POST['email'];
+// validation in add     
+        $username = htmlspecialchars($_POST['username'], ENT_QUOTES, 'UTF-8');
+        $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
         $password = sha1($_POST['password']);
-        $fullname = $_POST['fullname'];
-        $stmt = $connect->prepare('INSERT INTO `users` (`username` , `email` , `password` , `full_name` , `status` , `created_at`) VALUES (? , ? , ? , ? , "active" , now() ) ');
-        $stmt->execute([$username, $email, $password, $fullname]);
-        header("Location:users.php");
+        $fullname = htmlspecialchars($_POST['fullname'], ENT_QUOTES, 'UTF-8');
+        
+        if (!empty($username) && !empty($email) && !empty($password) && !empty($fullname)) {
+            $stmt = $connect->prepare('INSERT INTO `users` (`username` , `email` , `password` , `full_name` , `status` , `created_at`) VALUES (? , ? , ? , ? , "active" , now() ) ');
+            $stmt->execute([$username, $email, $password, $fullname]);
+            header("Location:users.php");
+        } else {
+            echo "All fields are required.";
+        }
     }
     ?>
 <?php elseif ($page == 'show'): ?>
@@ -138,16 +145,22 @@ $page = isset($_GET['action']) ? $_GET['action'] : 'index';
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
     </div>
-<?php elseif ($page == 'update'): ?>
+    <?php elseif ($page == 'update'): ?>
     <?php
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $id = $_POST['user_id'];
-        $username = $_POST['username'];
-        $email =  $_POST['email'];
-        $fullname = $_POST['fullname'];
-        $stmt = $connect->prepare('UPDATE `users` SET `username`=? ,`email`=?  , `full_name`=? WHERE `id` = ? ');
-        $stmt->execute([$username, $email, $fullname, $id]);
-        header("Location:users.php");
+        // validation in edit
+        $username = htmlspecialchars($_POST['username'], ENT_QUOTES, 'UTF-8');
+        $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
+        $fullname = htmlspecialchars($_POST['fullname'], ENT_QUOTES, 'UTF-8');
+        
+        if (!empty($username) && !empty($email) && !empty($fullname)) {
+            $stmt = $connect->prepare('UPDATE `users` SET `username`=? ,`email`=?  , `full_name`=? WHERE `id` = ? ');
+            $stmt->execute([$username, $email, $fullname, $id]);
+            header("Location:users.php");
+        } else {
+            echo "All fields are required.";
+        }
     }
     ?>
 <?php elseif ($page == 'delete'): ?>
